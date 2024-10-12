@@ -1,0 +1,543 @@
+/* styles.css */
+
+/* Reset some default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body Styling */
+body {
+    background-color: #e0e0e0; /* Gray background to simulate phone surroundings */
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Center the phone frame */
+.phone-frame {
+    width: 430px; /* Viewport width */
+    height: 932px; /* Viewport height */
+    background-color: #ffffff;
+    border: 16px black solid; /* Simulate phone bezels */
+    border-radius: 48px; /* Rounded corners */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    overflow: hidden; /* Clip overflowing content */
+    position: relative;
+    margin: 20px auto;
+}
+
+/* Inner Screen Area */
+.screen {
+    width: 100%;
+    height: 100%;
+    padding-top: 60px; /* Space for top bar */
+    padding-bottom: 60px; /* Space for bottom navigation */
+    overflow-y: auto; /* Enable vertical scrolling within the screen */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+}
+
+
+
+/* Top Bar */
+.top-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 15px;
+    z-index: 1000;
+
+}
+
+.top-bar a {
+    text-decoration: none;
+    color: #555555;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 12px;
+}
+.top-bar a .icon {
+    font-size: 24px;
+    margin-bottom: 2px;
+}
+
+
+
+.menu-icon, .logout-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 14px;
+    color: #333;
+}
+
+
+
+.top-bar .logout-button {
+    color: #555555;
+    
+}
+
+.menu-icon i, .logout-button i {
+    font-size: 20px;
+    margin-bottom: 2px;
+    color: #4CAF50;
+}
+
+.logout-button i {
+    color: #555555;
+}
+
+.app-title {
+    font-size: 20px;
+    color: #4CAF50;
+    font-weight: 500;
+    
+}
+
+.app-title-form {
+    font-size: 20px;
+    color: #4CAF50;
+    font-weight: 500;
+    margin-left: 18%;
+}
+
+
+
+/* Drawer Menu */
+.drawer {
+    position: absolute; /* Changed from fixed to absolute */
+    top: 0;
+    left: -250px; /* Hidden by default */
+    width: 250px;
+    height: 100%;
+    background-color: #ffffff;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.5);
+    transition: left 0.3s ease;
+    z-index: 1500;
+    padding-top: 60px; /* Space for top bar */
+}
+
+.drawer.open {
+    left: 0;
+}
+
+.drawer ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.drawer ul li {
+    padding: 15px 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.drawer ul li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.drawer ul li a i {
+    margin-right: 10px;
+    color: #4CAF50;
+}
+
+.drawer ul li a:hover {
+    background-color: #f5f5f5;
+}
+
+/* Overlay */
+.overlay {
+    position: absolute; /* Changed from fixed to absolute */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease;
+    z-index: 1400;
+}
+
+.overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+
+
+
+
+/* Bottom Navigation Bar */
+.bottom-nav {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background-color: #ffffff;
+    border-top: 1px solid #ddd;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.bottom-nav a {
+    text-decoration: none;
+    color: #555555;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 12px;
+}
+
+.bottom-nav a.active {
+    color: #4CAF50;
+}
+
+.bottom-nav a .icon {
+    font-size: 24px;
+    margin-bottom: 2px;
+}
+
+/* Navigation Icons (Using Font Awesome) */
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    font-size: 20px;
+    color: #4CAF50;
+}
+
+.header button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.header button:hover {
+    background-color: #45a049;
+}
+
+/* Cards */
+.card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.card-header h2 {
+    font-size: 16px;
+    color: #333;
+}
+
+.card-header button {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.3s;
+}
+
+.card-header button:hover {
+    background-color: #1976D2;
+}
+
+.card p {
+    font-size: 16px;
+    color: #555;
+}
+
+/* Quick Access Buttons */
+.quick-buttons {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.quick-buttons .button {
+    background-color: #FF9800;
+    color: white;
+    border: none;
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    margin: 5px;
+    transition: background-color 0.3s, transform 0.3s;
+    flex: 1 1 45%; /* Two buttons per row */
+    text-align: center;
+}
+
+.quick-buttons .button:hover {
+    background-color: #FB8C00;
+    transform: translateY(-2px);
+}
+
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    font-size: 14px;
+}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+button.edit-button {
+    background-color: gray;
+    color: white;
+    border: none;
+    padding: 5px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 3px;
+    font-size: 12px;
+    transition: background-color 0.3s;
+}
+
+button.edit-button:hover {
+    background-color: brown;
+}
+
+button.delete-button {
+    background-color: gray;
+    color: white;
+    border: none;
+    padding: 5px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.3s;
+}
+
+button.delete-button:hover {
+    background-color: brown;
+}
+
+/* Progress Bars */
+.progress-bar {
+    width: 100%;
+    background-color: #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.progress {
+    height: 15px;
+    background-color: #4CAF50;
+    width: 50%;
+    transition: width 0.3s;
+}
+
+/* Charts Placeholder */
+.chart-container {
+    position: relative;
+    width: 100%;
+    max-width: 300px; /* Adjusted for smaller screens */
+    margin: 0 auto 20px auto;
+    height: 200px; /* Fixed height for consistency */
+}
+
+.chart-container canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Insights */
+.insights {
+    margin-top: 20px;
+}
+
+.insight {
+    background-color: #fff3e0;
+    padding: 10px;
+    border-left: 5px solid #FF9800;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+
+.insight p {
+    color: #E65100;
+    font-size: 14px;
+}
+
+/* Forms */
+.form-container {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    max-width: 300px;
+    margin: 30px auto;
+}
+
+.form-container h2 {
+    text-align: center;
+    margin-bottom: 15px;
+    color: #4CAF50;
+    font-size: 18px;
+}
+
+.form-group {
+    margin-bottom: 12px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.form-actions button {
+    width: 48%;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+    margin-left: 25%;
+}
+
+.form-actions button:hover {
+    background-color: #45a049;
+}
+
+
+
+.switch-link {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.switch-link a {
+    color: #066955;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 14px;
+    transition: color 0.3s;
+}
+
+.switch-link a:hover {
+    color: #0bda61;
+}
+
+/* Responsive Design */
+@media (max-width: 430px) {
+    .phone-frame {
+        width: 100%;
+        height: 100vh;
+        border: none;
+        box-shadow: none;
+        border-radius: 0;
+    }
+
+    .chart-container {
+        max-width: 100%;
+        height: 150px;
+    }
+
+    .button {
+        font-size: 12px;
+        padding: 8px 10px;
+    }
+
+    nav a {
+        font-size: 12px;
+        margin-right: 10px;
+    }
+
+    .header h1 {
+        font-size: 18px;
+    }
+
+    .card-header h2 {
+        font-size: 14px;
+    }
+
+    .card p {
+        font-size: 14px;
+    }
+
+    .insight p {
+        font-size: 12px;
+    }
+
+    .switch-link p {
+        font-size: 12px;
+    }
+}

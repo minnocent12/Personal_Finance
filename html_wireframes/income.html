@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Income - Personal Finance Manager</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Ensures mobile responsiveness -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="screen">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <button class="menu-icon" id="menu-button"><i class="fas fa-bars"></i>
+                    <span>Menu</span>
+                    
+                
+                </button>
+                <div class="app-title">Personal Finance Manager</div>
+                <button class="logout-button" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+            </div>
+
+            <!-- Drawer Menu -->
+            <div class="drawer" id="drawer">
+                <ul>
+                    <li><a href="home.html"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="income.html"><i class="fas fa-wallet"></i> Income</a></li>
+                    <li><a href="expenses.html"><i class="fas fa-chart-pie"></i> Expenses</a></li>
+                    <li><a href="savings.html"><i class="fas fa-piggy-bank"></i> Saving Goals</a></li>
+                    <li><a href="investments.html"><i class="fas fa-chart-line"></i> Investments</a></li>
+                    <li><a href="budgeting.html"><i class="fas fa-budget"></i> Budgeting</a></li>
+                    <li><a href="reports.html"><i class="fas fa-chart-bar"></i> Reports</a></li>
+                    <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                </ul>
+            </div>
+
+            <!-- Overlay for Drawer -->
+            <div class="overlay" id="overlay"></div>
+
+
+
+
+
+            <!-- Income Content -->
+            <div class="header">
+                <h1>Income</h1>
+                <button class="button">+ Add Income</button>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Source</th>
+                        <th>Amount ($)</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Job</td>
+                        <td>5,000</td>
+                        <td>09/01/2024</td>
+                        <td>
+                            <button class="edit-button">Edit</button>
+                            <button class="delete-button">Delete</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Freelance</td>
+                        <td>2,000</td>
+                        <td>09/15/2024</td>
+                        <td>
+                            <button class="edit-button">Edit</button>
+                            <button class="delete-button">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p><strong>Total Income:</strong> $7,000</p>
+
+            
+
+            <!-- Bottom Navigation Bar -->
+            <div class="bottom-nav">
+                <a href="home.html">
+                    <i class="fas fa-home icon"></i>
+                    <span>Home</span>
+                </a>
+                <a href="income.html" class="active">
+                    <i class="fas fa-wallet icon"></i>
+                    <span>Income</span>
+                </a>
+                <a href="expenses.html">
+                    <i class="fas fa-chart-pie icon"></i>
+                    <span>Expenses</span>
+                </a>
+                <a href="saving.html" class="nav-item">
+                    <i class="fas fa-piggy-bank icon"></i>
+                    <span>Saving</span>
+                </a>
+
+                <a href="investments.html" class="nav-item">
+                    <i class="fas fa-chart-line icon"></i>
+                    <span>Investments</span>
+                </a>
+                <a href="budgeting.html" class="nav-item">
+                    <i class="fas fa-budget icon"></i>
+                    <span>Budget</span>
+                <a href="reports.html">
+                    <i class="fas fa-chart-line icon"></i>
+                    <span>Reports</span>
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Font Awesome Script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+
+    <!-- JavaScript for Drawer Functionality -->
+    <script>
+        // Function to toggle the drawer
+        document.getElementById('menu-button').addEventListener('click', function() {
+            document.getElementById('drawer').classList.toggle('open');
+            document.getElementById('overlay').classList.toggle('active');
+        });
+
+        // Close drawer when clicking outside
+        document.getElementById('overlay').addEventListener('click', function() {
+            document.getElementById('drawer').classList.remove('open');
+            document.getElementById('overlay').classList.remove('active');
+        });
+
+        function logout() {
+            // In a real application, you would clear authentication tokens or session data here
+            // For the wireframe, simply redirect to the Sign In page
+            window.location.href = "index.html";
+        }
+    </script>
+</body>
+</html>
