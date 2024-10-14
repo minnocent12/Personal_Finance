@@ -116,7 +116,7 @@ body {
 
 /* Drawer Menu */
 .drawer {
-    position: absolute; /* Changed from fixed to absolute */
+    position: absolute; /* Ensures drawer is within the phone frame */
     top: 0;
     left: -250px; /* Hidden by default */
     width: 250px;
@@ -125,7 +125,7 @@ body {
     box-shadow: 2px 0 5px rgba(0,0,0,0.5);
     transition: left 0.3s ease;
     z-index: 1500;
-    padding-top: 60px; /* Space for top bar */
+    padding-top: 0; /* Removed padding to accommodate profile section padding */
 }
 
 .drawer.open {
@@ -135,6 +135,7 @@ body {
 .drawer ul {
     list-style-type: none;
     padding: 0;
+    margin-top: 10px; /* Optional: Adds spacing below the profile section */
 }
 
 .drawer ul li {
@@ -161,7 +162,7 @@ body {
 
 /* Overlay */
 .overlay {
-    position: absolute; /* Changed from fixed to absolute */
+    position: absolute; /* Ensures overlay is within the phone frame */
     top: 0;
     left: 0;
     width: 100%;
@@ -177,6 +178,63 @@ body {
     opacity: 1;
     visibility: visible;
 }
+
+/* Profile Section Styling */
+.profile-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+    border-bottom: 1px solid #ddd;
+    background-color: #f9f9f9;
+}
+
+.profile-section i.fas.fa-user-circle {
+    color: #4CAF50; /* Profile icon color */
+    margin-bottom: 10px;
+}
+
+.profile-section .profile-name {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+}
+
+
+/* Logout Section Styling */
+.drawer-logout {
+    margin-top: 340px;
+    padding: 5px 20px;
+    border-top: 1px solid #ddd;
+    background-color: #f9f9f9;
+    text-align: center; /* Center the content horizontally */
+}
+
+.drawer-logout a {
+    text-decoration: none;
+    color: #555555; /* Red color to indicate logout */
+    font-size: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.drawer-logout a:hover {
+    background-color: #f5f5f5;
+    color: #796666;
+}
+
+.drawer-logout a i {
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+
+
+
+
 
 
 
@@ -267,7 +325,7 @@ body {
 }
 
 .card-header button {
-    background-color: #2196F3;
+    background-color: grey;
     color: white;
     border: none;
     padding: 6px 10px;
@@ -278,12 +336,23 @@ body {
 }
 
 .card-header button:hover {
-    background-color: #1976D2;
+    background-color: burlywood;
 }
 
 .card p {
     font-size: 16px;
     color: #555;
+}
+
+.card button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
 }
 
 /* Quick Access Buttons */
@@ -340,7 +409,7 @@ tr:hover {
 }
 
 button.edit-button {
-    background-color: gray;
+    background-color: grey;
     color: white;
     border: none;
     padding: 5px 8px;
@@ -352,11 +421,11 @@ button.edit-button {
 }
 
 button.edit-button:hover {
-    background-color: brown;
+    background-color: burlywood;
 }
 
 button.delete-button {
-    background-color: gray;
+    background-color: grey;
     color: white;
     border: none;
     padding: 5px 8px;
@@ -367,7 +436,7 @@ button.delete-button {
 }
 
 button.delete-button:hover {
-    background-color: brown;
+    background-color: burlywood;
 }
 
 /* Progress Bars */
@@ -541,3 +610,46 @@ button.delete-button:hover {
         font-size: 12px;
     }
 }
+
+/* Toggle Switch */
+.toggle1 {
+    position: relative;
+    display: inline-block;
+    width: 46px;
+    height: 24px;
+    margin-right: 10px;
+}
+
+.toggle1 input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px; width: 16px;
+    left: 4px; bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #4CAF50;
+}
+
+input:checked + .slider:before {
+    transform: translateX(22px);
+}
+ 
