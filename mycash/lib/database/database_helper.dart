@@ -224,6 +224,35 @@ class DatabaseHelper {
     );
   }
 
+  Future<void> deleteIncome(int id) async {
+    final db = await database;
+    await db.delete('income', where: 'id = ?', whereArgs: [id]);
+  }
+
+  Future<void> updateExpense(
+      int id, double amount, String category, String date) async {
+    final db = await database;
+    await db.update(
+      'expenses',
+      {
+        'amount': amount,
+        'category': category,
+        'date': date,
+      },
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  Future<void> deleteExpense(int id) async {
+    final db = await database;
+    await db.delete(
+      'expenses',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
   Future<List<Map<String, dynamic>>> getIncomeByUserId(int userId) async {
     final db = await database;
     return await db.query('income', where: 'user_id = ?', whereArgs: [userId]);
@@ -248,10 +277,5 @@ class DatabaseHelper {
     final db = await database;
     return await db
         .query('investments', where: 'user_id = ?', whereArgs: [userId]);
-  }
-
-  Future<void> deleteIncome(int id) async {
-    final db = await database;
-    await db.delete('income', where: 'id = ?', whereArgs: [id]);
   }
 }

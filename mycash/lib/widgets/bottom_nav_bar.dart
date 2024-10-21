@@ -69,6 +69,7 @@ class BottomNavBar extends StatelessWidget {
                   userId: userId,
                   firstName: firstName,
                   lastName: lastName,
+                  onDataUpdated: () {},
                 ),
               ),
             );
