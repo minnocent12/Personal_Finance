@@ -14,7 +14,14 @@ class TopAppBar extends StatelessWidget implements PreferredSizeWidget {
           scaffoldKey.currentState!.openDrawer();
         },
       ),
-      title: Text('Mycash', style: TextStyle(fontWeight: FontWeight.bold)),
+      title: Center(
+        child: Text(
+          'MyCash',
+          style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.green), // Set title color to green
+        ),
+      ),
       actions: [
         IconButton(
           icon: Icon(Icons.logout),

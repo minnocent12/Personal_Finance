@@ -4,6 +4,7 @@ import '../database/database_helper.dart';
 import '../providers/user_provider.dart';
 import '../widgets/bottom_nav_bar.dart';
 import '../widgets/custom_drawer.dart';
+import '../widgets/top_app_bar.dart'; // Import TopAppBar
 import 'income_screen.dart';
 import 'expense_screen.dart';
 import 'savings_screen.dart';
@@ -30,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
   double totalExpenses = 0;
   double totalSavings = 0;
   double totalInvestments = 0;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -91,13 +93,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if (user == null) {
       return Scaffold(
-        appBar: AppBar(title: Text('MyCash')),
+        key: _scaffoldKey,
+        appBar: TopAppBar(scaffoldKey: _scaffoldKey), // Use your TopAppBar
         body: Center(child: Text('No user data found.')),
       );
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text('MyCash')),
+      key: _scaffoldKey,
+      appBar: TopAppBar(scaffoldKey: _scaffoldKey), // Use your TopAppBar
       drawer: CustomDrawer(firstName: user.firstName, lastName: user.lastName),
       body: ListView(
         children: [

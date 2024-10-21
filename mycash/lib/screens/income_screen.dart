@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../database/database_helper.dart';
 import 'package:intl/intl.dart';
+import '../database/database_helper.dart';
 import '../widgets/bottom_nav_bar.dart';
 import '../widgets/custom_drawer.dart';
 import '../widgets/top_app_bar.dart';
@@ -26,6 +26,8 @@ class _IncomeScreenState extends State<IncomeScreen> {
   late DatabaseHelper db;
   List<Map<String, dynamic>> incomeList = [];
   double totalIncome = 0.0;
+  final GlobalKey<ScaffoldState> scaffoldKey =
+      GlobalKey<ScaffoldState>(); // Declare scaffoldKey here
 
   @override
   void initState() {
@@ -324,10 +326,9 @@ class _IncomeScreenState extends State<IncomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final scaffoldKey = GlobalKey<ScaffoldState>();
-
     return Scaffold(
-      appBar: TopAppBar(scaffoldKey: scaffoldKey),
+      key: scaffoldKey, // Assign the key here
+      appBar: TopAppBar(scaffoldKey: scaffoldKey), // Use the same key
       drawer: CustomDrawer(
         firstName: widget.firstName,
         lastName: widget.lastName,
