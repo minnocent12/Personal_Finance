@@ -23,6 +23,7 @@ class BottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
+      selectedItemColor: Color.fromARGB(255, 4, 163, 44),
       currentIndex: currentIndex,
       type: BottomNavigationBarType.fixed,
       items: [
@@ -94,6 +95,7 @@ class BottomNavBar extends StatelessWidget {
                   userId: userId,
                   firstName: firstName,
                   lastName: lastName,
+                  onDataUpdated: () {},
                 ),
               ),
             );

@@ -78,6 +78,7 @@ class DatabaseHelper {
         user_id INTEGER,
         investment_type TEXT,
         current_value REAL,
+        amount_invested REAL,
         purchase_date TEXT,
         FOREIGN KEY(user_id) REFERENCES users(id)
       )
@@ -121,12 +122,13 @@ class DatabaseHelper {
   }
 
   Future<int> addInvestment(int userId, String investmentType,
-      double currentValue, String purchaseDate) async {
+      double currentValue, double amountinvested, String purchaseDate) async {
     final db = await database;
     return await db.insert('investments', {
       'user_id': userId,
       'investment_type': investmentType,
       'current_value': currentValue,
+      'amount_invested': amountinvested,
       'purchase_date': purchaseDate
     });
   }
@@ -162,7 +164,7 @@ class DatabaseHelper {
   Future<double> getTotalInvestments(int userId) async {
     final db = await database;
     var result = await db.rawQuery(
-        'SELECT SUM(current_value) as total FROM investments WHERE user_id = ?',
+        'SELECT SUM(amount_invested) as total FROM investments WHERE user_id = ?',
         [userId]);
     return result.isNotEmpty && result[0]['total'] != null
         ? (result[0]['total'] as double)
@@ -233,7 +235,7 @@ class DatabaseHelper {
       int id, double amount, String category, String date) async {
     final db = await database;
     await db.update(
-      'expenses',
+      'expense',
       {
         'amount': amount,
         'category': category,
@@ -247,7 +249,32 @@ class DatabaseHelper {
   Future<void> deleteExpense(int id) async {
     final db = await database;
     await db.delete(
-      'expenses',
+      'expense',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  Future<void> updateinvestments(int id, String investmenttype,
+      double currentvalue, double amountinvested, String purchasedate) async {
+    final db = await database;
+    await db.update(
+      'investments',
+      {
+        'investment_type': investmenttype,
+        'current_value': currentvalue,
+        'amount_invested': amountinvested,
+        'purchase_date': purchasedate,
+      },
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  Future<void> deleteinvestments(int id) async {
+    final db = await database;
+    await db.delete(
+      'investments',
       where: 'id = ?',
       whereArgs: [id],
     );
@@ -261,8 +288,7 @@ class DatabaseHelper {
   // Method to retrieve expenses for a specific user
   Future<List<Map<String, dynamic>>> getExpenses(int userId) async {
     final db = await database;
-    return await db
-        .query('expenses', where: 'user_id = ?', whereArgs: [userId]);
+    return await db.query('expense', where: 'user_id = ?', whereArgs: [userId]);
   }
 
   // Method to retrieve savings goals for a specific user

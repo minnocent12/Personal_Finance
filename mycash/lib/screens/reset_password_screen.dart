@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:email_validator/email_validator.dart'; // For email validation
+import 'package:email_validator/email_validator.dart';
 import '../database/database_helper.dart';
 import 'home_screen.dart';
 import 'package:provider/provider.dart';
-import '../providers/user_provider.dart'; // Import your UserProvider
+import '../providers/user_provider.dart';
 import '../models/user.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
@@ -79,7 +79,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Colors.grey[200], // Set the background color to light gray
+        color: Colors.grey[200],
         child: Center(
           child: SingleChildScrollView(
             padding: EdgeInsets.all(16.0),
@@ -88,7 +88,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               children: [
                 // Adjust the logo size
                 Image.asset(
-                  'lib/assets/images/logo.png',
+                  'lib/assets/images/Mycash_Logo.png',
                   width: 150,
                   height: 150,
                   fit: BoxFit.contain,

@@ -13,7 +13,7 @@ class CustomDrawer extends StatelessWidget {
         children: [
           // Profile section
           Container(
-            padding: EdgeInsets.all(16),
+            padding: EdgeInsets.all(10),
             child: Column(
               children: [
                 Icon(Icons.account_circle,
@@ -26,7 +26,9 @@ class CustomDrawer extends StatelessWidget {
               ],
             ),
           ),
-          Divider(),
+          Divider(
+            color: Color.fromRGBO(2, 3, 3, 0),
+          ),
 
           // Expanded to push menu items to take up available space
           Expanded(
@@ -51,12 +53,14 @@ class CustomDrawer extends StatelessWidget {
             ),
           ),
 
-          // Logout section at the bottom
-          Divider(),
+          Divider(
+            color: Color.fromRGBO(2, 3, 3, 0),
+          ),
           Container(
-            color: Color(0xFFF9F9F9),
+            color: Color.fromARGB(255, 249, 249, 249),
             child: ListTile(
-              leading: Icon(Icons.logout, color: Colors.black),
+              leading: Icon(Icons.logout,
+                  color: const Color.fromARGB(255, 1, 45, 20)),
               title: Text('Logout'),
               onTap: () {
                 Navigator.pushReplacementNamed(context, '/signIn');
@@ -71,16 +75,17 @@ class CustomDrawer extends StatelessWidget {
   ListTile _buildDrawerItem(
       BuildContext context, IconData icon, String title, String route) {
     return ListTile(
-      leading: Icon(icon, color: Color(0xFF333333)),
+      leading: Icon(icon, color: Color.fromARGB(255, 69, 94, 78)),
       title: Text(title),
       onTap: () {
         Navigator.pop(context); // Close the drawer
         Navigator.pushNamed(context, route); // Navigate to the route
       },
       hoverColor: Color(0xFFF5F5F5),
-      contentPadding: EdgeInsets.symmetric(horizontal: 16),
+      contentPadding: EdgeInsets.symmetric(horizontal: 19),
       tileColor: Colors.white,
-      shape: Border(bottom: BorderSide(color: Color(0xFFDDDDDD))),
+      shape:
+          Border(bottom: BorderSide(color: Color.fromARGB(255, 22, 157, 96))),
     );
   }
 }

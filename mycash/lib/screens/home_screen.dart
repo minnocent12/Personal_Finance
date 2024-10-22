@@ -151,6 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   userId: user.id,
                   firstName: user.firstName,
                   lastName: user.lastName,
+                  onDataUpdated: _loadData,
                 ),
               ),
             );

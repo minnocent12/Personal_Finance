@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../database/database_helper.dart';
-import 'package:email_validator/email_validator.dart'; // For email validation
+import 'package:email_validator/email_validator.dart';
 import 'package:provider/provider.dart';
-import '../providers/user_provider.dart'; // Import your UserProvider
+import '../providers/user_provider.dart';
 import '../models/user.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -101,7 +101,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Colors.grey[200], // Set the background color to light gray
+        color: Colors.grey[200],
         child: Center(
           child: SingleChildScrollView(
             padding: EdgeInsets.all(16.0),
@@ -110,7 +110,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               children: [
                 // Adjust the logo size
                 Image.asset(
-                  'lib/assets/images/logo.png',
+                  'lib/assets/images/Mycash_Logo.png',
                   width: 150, // Set the desired width
                   height: 150, // Set the desired height
                   fit: BoxFit.contain,

@@ -79,7 +79,7 @@ class _SignInScreenState extends State<SignInScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
-                  'lib/assets/images/logo.png',
+                  'lib/assets/images/Mycash_Logo.png',
                   width: 150,
                   height: 150,
                   fit: BoxFit.contain,
