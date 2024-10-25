@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class TopAppBar extends StatelessWidget implements PreferredSizeWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
 
-  TopAppBar({required this.scaffoldKey});
+  const TopAppBar({super.key, required this.scaffoldKey});
 
   @override
   Widget build(BuildContext context) {

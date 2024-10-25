@@ -8,6 +8,9 @@ import 'screens/income_screen.dart';
 import 'screens/expense_screen.dart';
 import 'screens/savings_screen.dart';
 import 'screens/investment_screen.dart';
+import 'screens/budget_screen.dart';      // Import BudgetScreen
+import 'screens/reports_screen.dart';     // Import ReportsScreen
+import 'screens/settings_screen.dart';    // Import SettingsScreen
 import 'providers/user_provider.dart';
 
 void main() {
@@ -20,6 +23,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -68,7 +73,7 @@ class MyApp extends StatelessWidget {
             lastName: user.currentUser?.lastName ?? '',
           );
         },
-        '/Investment': (context) {
+        '/investment': (context) {
           final user = Provider.of<UserProvider>(context);
           return InvestmentScreen(
             userId: user.currentUser?.id ?? 0,
@@ -77,6 +82,30 @@ class MyApp extends StatelessWidget {
             onDataUpdated: () {
               // Optional: Implement a callback to update the data on return
             },
+          );
+        },
+        '/budget': (context) {
+          final user = Provider.of<UserProvider>(context);
+          return BudgetScreen(
+            userId: user.currentUser?.id ?? 0,
+            firstName: user.currentUser?.firstName ?? '',
+            lastName: user.currentUser?.lastName ?? '',
+          );
+        },
+        '/reports': (context) {
+          final user = Provider.of<UserProvider>(context);
+          return ReportsScreen(
+            userId: user.currentUser?.id ?? 0,
+            firstName: user.currentUser?.firstName ?? '',
+            lastName: user.currentUser?.lastName ?? '',
+          );
+        },
+        '/settings': (context) {
+          final user = Provider.of<UserProvider>(context);
+          return SettingsScreen(
+            userId: user.currentUser?.id ?? 0,
+            firstName: user.currentUser?.firstName ?? '',
+            lastName: user.currentUser?.lastName ?? '',
           );
         },
       },

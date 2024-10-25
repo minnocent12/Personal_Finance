@@ -46,8 +46,7 @@ class _InvestmentScreenState extends State<InvestmentScreen> {
     final user = Provider.of<UserProvider>(context, listen: false).currentUser;
 
     if (user != null) {
-      final investments = await _dbHelper.getInvestments(
-          user.id); // Assuming 'id' is the user's ID in User model
+      final investments = await _dbHelper.getInvestments(user.id);
       setState(() {
         _investments = investments;
         _isLoading = false;
@@ -75,7 +74,7 @@ class _InvestmentScreenState extends State<InvestmentScreen> {
         );
       } else {
         // Update existing investment
-        await _dbHelper.updateinvestments(
+        await _dbHelper.updateInvestment( // Corrected method name
           id,
           investmentType,
           currentValue,
@@ -85,14 +84,16 @@ class _InvestmentScreenState extends State<InvestmentScreen> {
       }
 
       _resetForm();
-      _loadInvestments();
+      await _loadInvestments();
+      widget.onDataUpdated(); // Notify data update
       Navigator.of(context).pop(); // Close the dialog
     }
   }
 
   Future<void> _deleteInvestment(int id) async {
-    await _dbHelper.deleteinvestments(id);
-    _loadInvestments();
+    await _dbHelper.deleteInvestment(id); // Corrected method name
+    await _loadInvestments();
+    widget.onDataUpdated(); // Notify data update
   }
 
   void _resetForm() {
@@ -102,17 +103,20 @@ class _InvestmentScreenState extends State<InvestmentScreen> {
     _dateController.clear();
   }
 
-  void _showInvestmentDialog(
-      {int? id,
-      String? investmentType,
-      double? currentValue,
-      double? amountInvested,
-      String? purchaseDate}) {
+  void _showInvestmentDialog({
+    int? id,
+    String? investmentType,
+    double? currentValue,
+    double? amountInvested,
+    String? purchaseDate,
+  }) {
     if (id != null) {
       _investmentTypeController.text = investmentType!;
       _currentValueController.text = currentValue.toString();
       _amountInvestedController.text = amountInvested.toString();
       _dateController.text = purchaseDate!;
+    } else {
+      _resetForm();
     }
 
     showDialog(
@@ -130,21 +134,26 @@ class _InvestmentScreenState extends State<InvestmentScreen> {
                 TextField(
                   controller: _currentValueController,
                   decoration: InputDecoration(labelText: 'Current Value'),
-                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  keyboardType:
+                      TextInputType.numberWithOptions(decimal: true),
                 ),
                 TextField(
                   controller: _amountInvestedController,
                   decoration: InputDecoration(labelText: 'Amount Invested'),
-                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  keyboardType:
+                      TextInputType.numberWithOptions(decimal: true),
                 ),
                 TextField(
                   controller: _dateController,
                   decoration: InputDecoration(labelText: 'Purchase Date'),
+                  readOnly: true,
                   onTap: () async {
                     FocusScope.of(context).requestFocus(FocusNode());
                     DateTime? picked = await showDatePicker(
                       context: context,
-                      initialDate: DateTime.now(),
+                      initialDate: purchaseDate != null
+                          ? DateTime.parse(purchaseDate)
+                          : DateTime.now(),
                       firstDate: DateTime(2000),
                       lastDate: DateTime.now(),
                     );
@@ -169,6 +178,9 @@ class _InvestmentScreenState extends State<InvestmentScreen> {
               onPressed: () {
                 _addOrUpdateInvestment(id: id);
               },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+              ),
               child: Text(id == null ? 'Save' : 'Update'),
             ),
           ],
@@ -197,7 +209,7 @@ class _InvestmentScreenState extends State<InvestmentScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Investment',
+                        'Investments',
                         style: TextStyle(
                           color: Colors.green,
                           fontSize: 20,
@@ -288,13 +300,13 @@ class _InvestmentScreenState extends State<InvestmentScreen> {
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
-                                      child: Text(investment['amount_invested']
-                                          .toString()),
+                                      child: Text(
+                                          '\$${investment['amount_invested'].toStringAsFixed(2)}'),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
-                                      child: Text(investment['current_value']
-                                          .toString()),
+                                      child: Text(
+                                          '\$${investment['current_value'].toStringAsFixed(2)}'),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
@@ -351,3 +363,5 @@ class _InvestmentScreenState extends State<InvestmentScreen> {
     );
   }
 }
+
+

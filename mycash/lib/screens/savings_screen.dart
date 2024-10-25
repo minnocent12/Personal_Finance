@@ -9,8 +9,8 @@ class SavingsScreen extends StatefulWidget {
   final String firstName;
   final String lastName;
 
-  SavingsScreen(
-      {required this.userId, required this.firstName, required this.lastName});
+  const SavingsScreen(
+      {super.key, required this.userId, required this.firstName, required this.lastName});
 
   @override
   _SavingsScreenState createState() => _SavingsScreenState();
@@ -40,7 +40,7 @@ class _SavingsScreenState extends State<SavingsScreen> {
         TextEditingController();
     DateTime selectedDate = DateTime.now();
 
-    Future<void> _selectDate(BuildContext context) async {
+    Future<void> selectDate(BuildContext context) async {
       final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
@@ -79,7 +79,7 @@ class _SavingsScreenState extends State<SavingsScreen> {
                     ),
                     IconButton(
                       icon: Icon(Icons.calendar_today),
-                      onPressed: () => _selectDate(context),
+                      onPressed: () => selectDate(context),
                     ),
                   ],
                 ),
@@ -144,10 +144,10 @@ class _SavingsScreenState extends State<SavingsScreen> {
         children: [
           ElevatedButton(
             onPressed: _showAddSavingsGoalDialog,
-            child: Text('+ Add Savings Goal'),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.green,
             ),
+            child: Text('+ Add Savings Goal'),
           ),
           Expanded(
             child: savingsGoals.isEmpty

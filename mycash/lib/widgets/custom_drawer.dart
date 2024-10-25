@@ -4,7 +4,7 @@ class CustomDrawer extends StatelessWidget {
   final String firstName;
   final String lastName;
 
-  CustomDrawer({required this.firstName, required this.lastName});
+  const CustomDrawer({super.key, required this.firstName, required this.lastName});
 
   @override
   Widget build(BuildContext context) {

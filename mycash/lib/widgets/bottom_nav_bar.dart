@@ -12,7 +12,7 @@ class BottomNavBar extends StatelessWidget {
   final String lastName;
   final int userId;
 
-  BottomNavBar({
+  const BottomNavBar({super.key, 
     required this.currentIndex,
     required this.onTap,
     required this.firstName,

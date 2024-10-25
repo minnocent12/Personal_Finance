@@ -12,7 +12,7 @@ class ExpenseScreen extends StatefulWidget {
   final String lastName;
   final VoidCallback onDataUpdated;
 
-  ExpenseScreen({
+  const ExpenseScreen({super.key, 
     required this.userId,
     required this.firstName,
     required this.lastName,
@@ -194,7 +194,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
 
     return Column(
       children: [
-        Container(
+        SizedBox(
           height: 200,
           child: charts.PieChart(
             _createChartData(),
@@ -237,7 +237,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
     final TextEditingController categoryController = TextEditingController();
     DateTime selectedDate = DateTime.now();
 
-    Future<void> _selectDate(BuildContext context) async {
+    Future<void> selectDate(BuildContext context) async {
       final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
@@ -278,7 +278,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                     ),
                     IconButton(
                       icon: Icon(Icons.calendar_today),
-                      onPressed: () => _selectDate(context),
+                      onPressed: () => selectDate(context),
                     ),
                   ],
                 ),
@@ -320,7 +320,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
         TextEditingController(text: expense['category']);
     DateTime selectedDate = DateTime.parse(expense['date']);
 
-    Future<void> _selectDate(BuildContext context) async {
+    Future<void> selectDate(BuildContext context) async {
       final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
@@ -361,7 +361,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                     ),
                     IconButton(
                       icon: Icon(Icons.calendar_today),
-                      onPressed: () => _selectDate(context),
+                      onPressed: () => selectDate(context),
                     ),
                   ],
                 ),
@@ -423,10 +423,10 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                 ),
                 ElevatedButton(
                   onPressed: _showAddExpenseDialog,
-                  child: Text('+ Add Expense'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
                   ),
+                  child: Text('+ Add Expense'),
                 ),
               ],
             ),
