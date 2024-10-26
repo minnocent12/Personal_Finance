@@ -1,3 +1,5 @@
+// lib/screens/budget_screen.dart
+
 import 'package:flutter/material.dart';
 import '../database/database_helper.dart';
 import '../widgets/bottom_nav_bar.dart';
@@ -10,13 +12,15 @@ class BudgetScreen extends StatefulWidget {
   final String lastName;
 
   const BudgetScreen({
-    Key? key,
+    super.key, // Using super-parameters as per Dart 2.17
     required this.userId,
     required this.firstName,
     required this.lastName,
-  }) : super(key: key);
+  });
 
   @override
+  // Suppressing the linter warning for private types in public API
+  // ignore: library_private_types_in_public_api
   _BudgetScreenState createState() => _BudgetScreenState();
 }
 
@@ -27,6 +31,8 @@ class _BudgetScreenState extends State<BudgetScreen> {
   double remainingBudget = 0.0;
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
+  bool isLoading = false; // To manage loading state
+
   @override
   void initState() {
     super.initState();
@@ -34,34 +40,48 @@ class _BudgetScreenState extends State<BudgetScreen> {
     _loadBudgetData();
   }
 
+  // Function to load budget and expenses data
   void _loadBudgetData() async {
+    setState(() {
+      isLoading = true;
+    });
     try {
       double fetchedBudget = await db.getUserBudget(widget.userId);
       double fetchedExpenses = await db.getTotalExpenses(widget.userId);
+      if (!mounted) return; // Ensure widget is still mounted
       setState(() {
         monthlyBudget = fetchedBudget;
         totalExpenses = fetchedExpenses;
         remainingBudget = monthlyBudget - totalExpenses;
       });
     } catch (e) {
-      print('Error loading budget data: $e');
-      // Optionally show an error message to the user
+      print('Error loading budget data: $e'); // Consider removing in production
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to load budget data')),
+      );
+    } finally {
+      if (!mounted) return;
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
+  // Function to display the Set Budget dialog
   void _showSetBudgetDialog() {
     final TextEditingController budgetController =
-        TextEditingController(text: monthlyBudget.toString());
+        TextEditingController(text: monthlyBudget.toStringAsFixed(2));
 
     showDialog(
       context: context,
-      builder: (context) {
+      builder: (BuildContext context) {
         return AlertDialog(
           title: Text("Set Monthly Budget"),
           content: TextField(
             controller: budgetController,
             decoration: InputDecoration(labelText: 'Budget Amount (USD)'),
-            keyboardType: TextInputType.number,
+            keyboardType: TextInputType.numberWithOptions(decimal: true),
           ),
           actions: [
             TextButton(
@@ -70,17 +90,30 @@ class _BudgetScreenState extends State<BudgetScreen> {
             ),
             ElevatedButton(
               onPressed: () async {
-                final budgetAmount =
-                    double.tryParse(budgetController.text) ?? 0.0;
-                print('Attempting to save budget: $budgetAmount'); // Debug print
+                final budgetText = budgetController.text.trim();
+                final budgetAmount = double.tryParse(budgetText) ?? -1.0;
+
+                if (budgetAmount < 0) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Please enter a valid budget amount')),
+                  );
+                  return;
+                }
+
                 try {
                   await db.setUserBudget(widget.userId, budgetAmount);
-                  print('Budget saved successfully'); // Debug print
+                  if (!mounted) return; // Ensure widget is still mounted
                   _loadBudgetData();
                   Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Budget updated successfully')),
+                  );
                 } catch (e) {
-                  print('Error saving budget: $e'); // Debug print
-                  // Optionally show an error message to the user
+                  print('Error saving budget: $e'); // Consider removing in production
+                  if (!mounted) return;
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Failed to update budget')),
+                  );
                 }
               },
               style: ElevatedButton.styleFrom(
@@ -94,6 +127,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
     );
   }
 
+  // Widget to display budget overview
   Widget _buildBudgetOverview() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start, // Align texts to the start
@@ -128,37 +162,50 @@ class _BudgetScreenState extends State<BudgetScreen> {
         firstName: widget.firstName,
         lastName: widget.lastName,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch, // Stretch to full width
-          children: [
-            _buildBudgetOverview(),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                print('Set Budget button pressed'); // Debug print
-                _showSetBudgetDialog();
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                padding: EdgeInsets.symmetric(vertical: 16.0),
-              ),
-              child: Text(
-                'Set Budget',
-                style: TextStyle(fontSize: 16),
+      body: isLoading
+          ? Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch, // Stretch to full width
+                children: [
+                  _buildBudgetOverview(),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Removed print statement to adhere to best practices
+                      _showSetBudgetDialog();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      padding: EdgeInsets.symmetric(vertical: 16.0),
+                    ),
+                    child: Text(
+                      'Set Budget',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-      ),
       bottomNavigationBar: BottomNavBar(
-        currentIndex: 2,
+        currentIndex: 2, // Assuming Budget is the third tab
         onTap: (index) {
-          print('BottomNavBar tapped: $index'); // Debug print
-          // Handle navigation based on index
-          // Example:
-          // if (index == 0) Navigator.pushNamed(context, '/home');
+          // Removed print statement to adhere to best practices
+          switch (index) {
+            case 0:
+              Navigator.pushReplacementNamed(context, '/home');
+              break;
+            case 1:
+              Navigator.pushReplacementNamed(context, '/categories'); // Ensure this route exists
+              break;
+            case 2:
+              // Already on BudgetScreen
+              break;
+            case 3:
+              Navigator.pushReplacementNamed(context, '/settings');
+              break;
+          }
         },
         firstName: widget.firstName,
         lastName: widget.lastName,
@@ -167,3 +214,4 @@ class _BudgetScreenState extends State<BudgetScreen> {
     );
   }
 }
+
