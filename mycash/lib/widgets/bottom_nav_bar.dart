@@ -4,6 +4,8 @@ import '../screens/home_screen.dart';
 import '../screens/expense_screen.dart';
 import '../screens/savings_screen.dart';
 import '../screens/investment_screen.dart';
+import '../screens/budget_screen.dart';
+import '../screens/reports_screen.dart';
 
 class BottomNavBar extends StatelessWidget {
   final int currentIndex;
@@ -12,7 +14,7 @@ class BottomNavBar extends StatelessWidget {
   final String lastName;
   final int userId;
 
-  const BottomNavBar({super.key, 
+  BottomNavBar({
     required this.currentIndex,
     required this.onTap,
     required this.firstName,
@@ -101,10 +103,28 @@ class BottomNavBar extends StatelessWidget {
             );
             break;
           case 5:
-            Navigator.pushNamed(context, '/budgeting');
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BudgetScreen(
+                  userId: userId,
+                  firstName: firstName,
+                  lastName: lastName,
+                ),
+              ),
+            );
             break;
           case 6:
-            Navigator.pushNamed(context, '/reports');
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ReportsScreen(
+                  userId: userId,
+                  firstName: firstName,
+                  lastName: lastName,
+                ),
+              ),
+            );
             break;
         }
       },

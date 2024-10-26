@@ -77,7 +77,8 @@ class _BudgetScreenState extends State<BudgetScreen> {
 
     showDialog(
       context: context,
-      builder: (BuildContext dialogContext) { // Use dialogContext to avoid confusion
+      builder: (BuildContext dialogContext) {
+        // Use dialogContext to avoid confusion
         return AlertDialog(
           title: Text("Set Monthly Budget"),
           content: TextField(
@@ -87,7 +88,8 @@ class _BudgetScreenState extends State<BudgetScreen> {
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(dialogContext), // Use dialogContext
+              onPressed: () =>
+                  Navigator.pop(dialogContext), // Use dialogContext
               child: Text('Cancel'),
             ),
             ElevatedButton(
@@ -97,7 +99,8 @@ class _BudgetScreenState extends State<BudgetScreen> {
 
                 if (budgetAmount < 0) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Please enter a valid budget amount')),
+                    SnackBar(
+                        content: Text('Please enter a valid budget amount')),
                   );
                   return;
                 }
@@ -170,7 +173,8 @@ class _BudgetScreenState extends State<BudgetScreen> {
           : SingleChildScrollView(
               padding: const EdgeInsets.all(16.0),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch, // Stretch to full width
+                crossAxisAlignment:
+                    CrossAxisAlignment.stretch, // Stretch to full width
                 children: [
                   _buildBudgetOverview(),
                   SizedBox(height: 20),
@@ -192,28 +196,12 @@ class _BudgetScreenState extends State<BudgetScreen> {
               ),
             ),
       bottomNavigationBar: BottomNavBar(
-        currentIndex: 2, // Assuming Budget is the third tab
-        onTap: (index) {
-          // Removed print statement to adhere to best practices
-          switch (index) {
-            case 0:
-              Navigator.pushReplacementNamed(context, '/home');
-              break;
-            case 1:
-              Navigator.pushReplacementNamed(context, '/categories'); // Ensure this route exists
-              break;
-            case 2:
-              // Already on BudgetScreen, do nothing or show a message
-              break;
-            case 3:
-              Navigator.pushReplacementNamed(context, '/settings');
-              break;
-          }
-        },
+        currentIndex: 5,
+        onTap: (index) {},
         firstName: widget.firstName,
         lastName: widget.lastName,
         userId: widget.userId,
-      ),
+      ), // Custom Bottom Navigation Bar
     );
   }
 }

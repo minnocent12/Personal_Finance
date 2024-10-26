@@ -350,6 +350,7 @@ class DatabaseHelper {
     final db = await database;
     var result = await db.query('users',
         columns: ['monthly_budget'], where: 'id = ?', whereArgs: [userId]);
+        
     return result.isNotEmpty && result.first['monthly_budget'] != null
         ? result.first['monthly_budget'] as double
         : 0.0;

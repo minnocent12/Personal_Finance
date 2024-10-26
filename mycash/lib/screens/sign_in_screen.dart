@@ -5,8 +5,6 @@ import '../models/user.dart';
 import '../providers/user_provider.dart';
 
 class SignInScreen extends StatefulWidget {
-  const SignInScreen({super.key});
-
   @override
   _SignInScreenState createState() => _SignInScreenState();
 }

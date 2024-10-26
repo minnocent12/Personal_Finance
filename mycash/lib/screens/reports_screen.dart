@@ -145,14 +145,12 @@ class _ReportsScreenState extends State<ReportsScreen> {
         ),
       ),
       bottomNavigationBar: BottomNavBar(
-        currentIndex: 4,
-        onTap: (index) {
-          // Handle navigation if necessary
-        },
+        currentIndex: 6,
+        onTap: (index) {},
         firstName: widget.firstName,
         lastName: widget.lastName,
         userId: widget.userId,
-      ),
+      ), // Custom Bottom Navigation Bar
     );
   }
 }

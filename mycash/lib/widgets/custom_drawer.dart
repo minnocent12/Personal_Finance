@@ -4,7 +4,7 @@ class CustomDrawer extends StatelessWidget {
   final String firstName;
   final String lastName;
 
-  const CustomDrawer({super.key, required this.firstName, required this.lastName});
+  CustomDrawer({required this.firstName, required this.lastName});
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +44,8 @@ class CustomDrawer extends StatelessWidget {
                     context, Icons.savings, 'Saving Goals', '/savings'),
                 _buildDrawerItem(
                     context, Icons.trending_up, 'Investments', '/investments'),
-                _buildDrawerItem(context, Icons.account_balance_wallet,
-                    'Budgeting', '/budgeting'),
+                _buildDrawerItem(
+                    context, Icons.account_balance_wallet, 'Budget', '/budget'),
                 _buildDrawerItem(context, Icons.report, 'Reports', '/reports'),
                 _buildDrawerItem(
                     context, Icons.settings, 'Settings', '/settings'),
