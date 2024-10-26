@@ -9,11 +9,11 @@ class SettingsScreen extends StatefulWidget {
   final String lastName;
 
   const SettingsScreen({
-    Key? key,
+    super.key,
     required this.userId,
     required this.firstName,
     required this.lastName,
-  }) : super(key: key);
+  });
 
   @override
   _SettingsScreenState createState() => _SettingsScreenState();

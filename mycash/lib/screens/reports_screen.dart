@@ -11,11 +11,11 @@ class ReportsScreen extends StatefulWidget {
   final String lastName;
 
   const ReportsScreen({
-    Key? key,
+    super.key,
     required this.userId,
     required this.firstName,
     required this.lastName,
-  }) : super(key: key);
+  });
 
   @override
   _ReportsScreenState createState() => _ReportsScreenState();
@@ -23,8 +23,8 @@ class ReportsScreen extends StatefulWidget {
 
 class _ReportsScreenState extends State<ReportsScreen> {
   late DatabaseHelper db;
-  List<charts.Series<ExpenseData, String>> _expenseSeries = [];
-  List<charts.Series<TimeSeriesIncome, DateTime>> _incomeSeries = [];
+  final List<charts.Series<ExpenseData, String>> _expenseSeries = [];
+  final List<charts.Series<TimeSeriesIncome, DateTime>> _incomeSeries = [];
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override

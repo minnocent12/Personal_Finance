@@ -11,7 +11,7 @@ class IncomeScreen extends StatefulWidget {
   final String lastName;
   final VoidCallback onDataUpdated; // Callback for data update
 
-  IncomeScreen({
+  const IncomeScreen({super.key, 
     required this.userId,
     required this.firstName,
     required this.lastName,
@@ -48,7 +48,7 @@ class _IncomeScreenState extends State<IncomeScreen> {
     final TextEditingController descriptionController = TextEditingController();
     DateTime selectedDate = DateTime.now();
 
-    Future<void> _selectDate(BuildContext context) async {
+    Future<void> selectDate(BuildContext context) async {
       final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
@@ -94,7 +94,7 @@ class _IncomeScreenState extends State<IncomeScreen> {
                   ),
                   IconButton(
                     icon: Icon(Icons.calendar_today),
-                    onPressed: () => _selectDate(context),
+                    onPressed: () => selectDate(context),
                   ),
                 ],
               ),
@@ -138,7 +138,7 @@ class _IncomeScreenState extends State<IncomeScreen> {
         TextEditingController(text: income['description']);
     DateTime selectedDate = DateTime.parse(income['date']);
 
-    Future<void> _selectDate(BuildContext context) async {
+    Future<void> selectDate(BuildContext context) async {
       final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
@@ -184,7 +184,7 @@ class _IncomeScreenState extends State<IncomeScreen> {
                   ),
                   IconButton(
                     icon: Icon(Icons.calendar_today),
-                    onPressed: () => _selectDate(context),
+                    onPressed: () => selectDate(context),
                   ),
                 ],
               ),

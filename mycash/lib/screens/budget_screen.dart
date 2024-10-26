@@ -35,10 +35,18 @@ class _BudgetScreenState extends State<BudgetScreen> {
   }
 
   void _loadBudgetData() async {
-    monthlyBudget = await db.getUserBudget(widget.userId);
-    totalExpenses = await db.getTotalExpenses(widget.userId);
-    remainingBudget = monthlyBudget - totalExpenses;
-    setState(() {});
+    try {
+      double fetchedBudget = await db.getUserBudget(widget.userId);
+      double fetchedExpenses = await db.getTotalExpenses(widget.userId);
+      setState(() {
+        monthlyBudget = fetchedBudget;
+        totalExpenses = fetchedExpenses;
+        remainingBudget = monthlyBudget - totalExpenses;
+      });
+    } catch (e) {
+      print('Error loading budget data: $e');
+      // Optionally show an error message to the user
+    }
   }
 
   void _showSetBudgetDialog() {
@@ -61,13 +69,19 @@ class _BudgetScreenState extends State<BudgetScreen> {
               child: Text('Cancel'),
             ),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 final budgetAmount =
                     double.tryParse(budgetController.text) ?? 0.0;
-                db.setUserBudget(widget.userId, budgetAmount).then((_) {
+                print('Attempting to save budget: $budgetAmount'); // Debug print
+                try {
+                  await db.setUserBudget(widget.userId, budgetAmount);
+                  print('Budget saved successfully'); // Debug print
                   _loadBudgetData();
-                });
-                Navigator.pop(context);
+                  Navigator.pop(context);
+                } catch (e) {
+                  print('Error saving budget: $e'); // Debug print
+                  // Optionally show an error message to the user
+                }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green,
@@ -82,15 +96,18 @@ class _BudgetScreenState extends State<BudgetScreen> {
 
   Widget _buildBudgetOverview() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start, // Align texts to the start
       children: [
         Text(
           'Monthly Budget: \$${monthlyBudget.toStringAsFixed(2)}',
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
+        SizedBox(height: 8),
         Text(
           'Total Expenses: \$${totalExpenses.toStringAsFixed(2)}',
           style: TextStyle(fontSize: 16),
         ),
+        SizedBox(height: 8),
         Text(
           'Remaining Budget: \$${remainingBudget.toStringAsFixed(2)}',
           style: TextStyle(
@@ -111,18 +128,26 @@ class _BudgetScreenState extends State<BudgetScreen> {
         firstName: widget.firstName,
         lastName: widget.lastName,
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch, // Stretch to full width
           children: [
             _buildBudgetOverview(),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: _showSetBudgetDialog,
+              onPressed: () {
+                print('Set Budget button pressed'); // Debug print
+                _showSetBudgetDialog();
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green,
+                padding: EdgeInsets.symmetric(vertical: 16.0),
               ),
-              child: Text('Set Budget'),
+              child: Text(
+                'Set Budget',
+                style: TextStyle(fontSize: 16),
+              ),
             ),
           ],
         ),
@@ -130,7 +155,10 @@ class _BudgetScreenState extends State<BudgetScreen> {
       bottomNavigationBar: BottomNavBar(
         currentIndex: 2,
         onTap: (index) {
-          // Handle navigation if necessary
+          print('BottomNavBar tapped: $index'); // Debug print
+          // Handle navigation based on index
+          // Example:
+          // if (index == 0) Navigator.pushNamed(context, '/home');
         },
         firstName: widget.firstName,
         lastName: widget.lastName,

@@ -13,7 +13,7 @@ class InvestmentScreen extends StatefulWidget {
   final String lastName;
   final VoidCallback onDataUpdated; // Callback for data update
 
-  InvestmentScreen({
+  const InvestmentScreen({super.key, 
     required this.userId,
     required this.firstName,
     required this.lastName,
@@ -31,10 +31,10 @@ class _InvestmentScreenState extends State<InvestmentScreen> {
   bool _isLoading = true;
 
   // Controllers for the dialog
-  TextEditingController _investmentTypeController = TextEditingController();
-  TextEditingController _currentValueController = TextEditingController();
-  TextEditingController _amountInvestedController = TextEditingController();
-  TextEditingController _dateController = TextEditingController();
+  final TextEditingController _investmentTypeController = TextEditingController();
+  final TextEditingController _currentValueController = TextEditingController();
+  final TextEditingController _amountInvestedController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
 
   @override
   void initState() {
@@ -346,7 +346,7 @@ class _InvestmentScreenState extends State<InvestmentScreen> {
                                     ),
                                   ],
                                 );
-                              }).toList(),
+                              }),
                             ],
                           ),
                         ),

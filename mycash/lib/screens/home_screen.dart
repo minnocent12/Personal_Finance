@@ -15,7 +15,7 @@ class HomeScreen extends StatefulWidget {
   final String firstName;
   final String lastName;
 
-  HomeScreen({
+  const HomeScreen({super.key, 
     required this.userId,
     required this.firstName,
     required this.lastName,
