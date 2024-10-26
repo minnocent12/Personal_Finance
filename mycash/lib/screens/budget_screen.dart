@@ -55,12 +55,14 @@ class _BudgetScreenState extends State<BudgetScreen> {
         remainingBudget = monthlyBudget - totalExpenses;
       });
     } catch (e) {
-      print('Error loading budget data: $e'); // Consider removing in production
+      // Remove print statement; use SnackBar for user feedback
+      // print('Error loading budget data: $e');
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to load budget data')),
       );
     } finally {
+      // Do not use return in finally
       if (!mounted) return;
       setState(() {
         isLoading = false;
@@ -75,7 +77,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
 
     showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (BuildContext dialogContext) { // Use dialogContext to avoid confusion
         return AlertDialog(
           title: Text("Set Monthly Budget"),
           content: TextField(
@@ -85,7 +87,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => Navigator.pop(dialogContext), // Use dialogContext
               child: Text('Cancel'),
             ),
             ElevatedButton(
@@ -104,12 +106,13 @@ class _BudgetScreenState extends State<BudgetScreen> {
                   await db.setUserBudget(widget.userId, budgetAmount);
                   if (!mounted) return; // Ensure widget is still mounted
                   _loadBudgetData();
-                  Navigator.pop(context);
+                  Navigator.pop(dialogContext); // Use dialogContext
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Budget updated successfully')),
                   );
                 } catch (e) {
-                  print('Error saving budget: $e'); // Consider removing in production
+                  // Remove print statement; use SnackBar for user feedback
+                  // print('Error saving budget: $e');
                   if (!mounted) return;
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Failed to update budget')),
@@ -200,7 +203,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
               Navigator.pushReplacementNamed(context, '/categories'); // Ensure this route exists
               break;
             case 2:
-              // Already on BudgetScreen
+              // Already on BudgetScreen, do nothing or show a message
               break;
             case 3:
               Navigator.pushReplacementNamed(context, '/settings');
@@ -214,4 +217,3 @@ class _BudgetScreenState extends State<BudgetScreen> {
     );
   }
 }
-
