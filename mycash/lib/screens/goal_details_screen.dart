@@ -41,8 +41,10 @@ class _GoalDetailsScreenState extends State<GoalDetailsScreen> {
     final goal = await db.getGoal(widget.goalId);
     if (goal != null) {
       goalName = goal['goal_name'] ?? '';
-      totalAmount = goal['current_amount'] ?? 0.0;
+
       savingsEntries = await db.getSavingsEntries(widget.goalId);
+      totalAmount = savingsEntries.fold(
+          0.0, (sum, entry) => sum + (entry['amount'] as double));
     }
     setState(() {});
   }
@@ -343,7 +345,7 @@ class _GoalDetailsScreenState extends State<GoalDetailsScreen> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'Total: \$${totalAmount.toStringAsFixed(2)}',
+                  'Total: \$${totalAmount.toStringAsFixed(2)}', // This will now display the total of savings entries
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),

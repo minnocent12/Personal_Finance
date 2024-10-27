@@ -184,7 +184,7 @@ class _SavingsScreenState extends State<SavingsScreen> {
       MaterialPageRoute(
         builder: (context) => GoalDetailsScreen(
           goalId: goalId,
-          userId: widget.userId, // Add this line
+          userId: widget.userId,
           firstName: widget.firstName,
           lastName: widget.lastName,
         ),
@@ -206,13 +206,11 @@ class _SavingsScreenState extends State<SavingsScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child:
-                Text(selectionColor: Color.fromARGB(1, 80, 113, 113), 'Cancel'),
+            child: Text('Cancel'),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
-            child:
-                Text(selectionColor: Color.fromARGB(1, 92, 117, 143), 'Delete'),
+            child: Text('Delete'),
           ),
         ],
       ),
@@ -246,6 +244,10 @@ class _SavingsScreenState extends State<SavingsScreen> {
                   Text('Current Amount: \$${goal['current_amount']}'),
                   Text('Target Amount: \$${goal['target_amount']}'),
                   Text('Target Date: ${goal['target_date']}'),
+                  SizedBox(height: 8),
+                  // Horizontal bar chart
+                  _buildProgressBar(
+                      goal['current_amount'], goal['target_amount']),
                 ],
               ),
               trailing: Row(
@@ -271,6 +273,77 @@ class _SavingsScreenState extends State<SavingsScreen> {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildProgressBar(double currentAmount, double targetAmount) {
+    double remainingAmount =
+        (targetAmount - currentAmount).clamp(0, double.infinity);
+    double totalAmount = targetAmount;
+
+    double percentageAchieved =
+        (totalAmount > 0) ? (currentAmount / totalAmount) : 0.0;
+    double percentageRemaining =
+        (totalAmount > 0) ? (remainingAmount / totalAmount) : 0.0;
+
+    return Column(
+      children: [
+        LayoutBuilder(
+          builder: (context, constraints) {
+            return Container(
+              height: 10,
+              width: constraints.maxWidth,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: FractionallySizedBox(
+                widthFactor: percentageAchieved,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.green,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+        SizedBox(height: 5),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            return Container(
+              height: 10,
+              width: constraints.maxWidth,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: FractionallySizedBox(
+                widthFactor: percentageRemaining,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+        SizedBox(height: 5),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+                child: Text('Saved: \$${currentAmount.toStringAsFixed(2)}')),
+            Expanded(
+                child: Text(
+                    'Remaining: \$${remainingAmount.toStringAsFixed(2)}',
+                    textAlign: TextAlign.right)),
+          ],
+        ),
+      ],
     );
   }
 
@@ -303,23 +376,11 @@ class _SavingsScreenState extends State<SavingsScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
                   ),
-                  child: Text('+ Add Savings Goal'),
+                  child: Text('+ Add Goal'),
                 ),
               ],
             ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: savingsGoals.isEmpty
-                  ? Center(child: Text('No savings goals available'))
-                  : _buildSavingsGoalList(),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                'Total Savings: \$${totalSavings.toStringAsFixed(2)}',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-            ),
+            Expanded(child: _buildSavingsGoalList()),
           ],
         ),
       ),

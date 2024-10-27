@@ -226,7 +226,7 @@ class DatabaseHelper {
   Future<double> getTotalSavings(int userId) async {
     final db = await database;
     var result = await db.rawQuery(
-        'SELECT SUM(target_amount) as total FROM savings_goals WHERE user_id = ?',
+        'SELECT SUM(current_amount) as total FROM savings_goals WHERE user_id = ?',
         [userId]);
     return result.first['total'] != null
         ? result.first['total'] as double
