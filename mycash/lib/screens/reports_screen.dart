@@ -23,8 +23,8 @@ class ReportsScreen extends StatefulWidget {
 
 class _ReportsScreenState extends State<ReportsScreen> {
   late DatabaseHelper db;
-  final List<charts.Series<ExpenseData, String>> _expenseSeries = [];
-  final List<charts.Series<TimeSeriesIncome, DateTime>> _incomeSeries = [];
+  List<charts.Series<ExpenseData, String>> _expenseSeries = [];
+  List<charts.Series<TimeSeriesIncome, DateTime>> _incomeSeries = [];
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -39,60 +39,76 @@ class _ReportsScreenState extends State<ReportsScreen> {
     List<Map<String, dynamic>> expenseData =
         await db.getExpensesGroupedByCategory(widget.userId);
 
-    // Prepare pie chart data
-    var pieData = expenseData.map((data) {
-      return ExpenseData(
-        category: data['category'],
-        amount: data['total_amount'],
-      );
-    }).toList();
+    // Check if expenseData is not empty
+    if (expenseData.isNotEmpty) {
+      var barData = expenseData.map((data) {
+        return ExpenseData(
+          category: data['category'],
+          amount: data['total_amount'] ?? 0.0,
+        );
+      }).toList();
 
-    _expenseSeries.add(
-      charts.Series(
-        id: 'Expenses',
-        domainFn: (ExpenseData data, _) => data.category,
-        measureFn: (ExpenseData data, _) => data.amount,
-        data: pieData,
-        labelAccessorFn: (ExpenseData data, _) =>
-            '${data.category}: \$${data.amount.toStringAsFixed(2)}',
-      ),
-    );
+      // Populate expense series
+      setState(() {
+        _expenseSeries = [
+          charts.Series<ExpenseData, String>(
+            id: 'Expenses',
+            colorFn: (_, __) =>
+                charts.MaterialPalette.green.shadeDefault, // Set color to green
+            domainFn: (ExpenseData data, _) => data.category,
+            measureFn: (ExpenseData data, _) => data.amount,
+            data: barData,
+            labelAccessorFn: (ExpenseData data, _) =>
+                '${data.category}: \$${data.amount.toStringAsFixed(2)}',
+          ),
+        ];
+      });
+    } else {
+      setState(() {
+        _expenseSeries = []; // Clear series if no data
+      });
+    }
 
     // Fetch income over time
     List<Map<String, dynamic>> incomeData =
         await db.getMonthlyIncome(widget.userId);
 
-    var lineData = incomeData.map((data) {
-      return TimeSeriesIncome(
-        date: DateTime.parse(data['date']),
-        amount: data['total_amount'],
-      );
-    }).toList();
+    // Check if incomeData is not empty
+    if (incomeData.isNotEmpty) {
+      var lineData = incomeData.map((data) {
+        return TimeSeriesIncome(
+          date: DateTime.parse('${data['date']}-01'),
+          amount: data['total_amount'] ?? 0.0,
+        );
+      }).toList();
 
-    _incomeSeries.add(
-      charts.Series(
-        id: 'Income',
-        domainFn: (TimeSeriesIncome data, _) => data.date,
-        measureFn: (TimeSeriesIncome data, _) => data.amount,
-        data: lineData,
-      ),
-    );
-
-    setState(() {});
+      // Populate income series
+      setState(() {
+        _incomeSeries = [
+          charts.Series<TimeSeriesIncome, DateTime>(
+            id: 'Income',
+            colorFn: (_, __) =>
+                charts.MaterialPalette.green.shadeDefault, // Set color to green
+            domainFn: (TimeSeriesIncome data, _) => data.date,
+            measureFn: (TimeSeriesIncome data, _) => data.amount,
+            data: lineData,
+          ),
+        ];
+      });
+    } else {
+      setState(() {
+        _incomeSeries = []; // Clear series if no data
+      });
+    }
   }
 
   Widget _buildExpenseChart() {
-    return charts.PieChart(
+    return charts.BarChart(
       _expenseSeries,
       animate: true,
-      animationDuration: Duration(seconds: 1),
-      defaultRenderer: charts.ArcRendererConfig(
-        arcWidth: 100,
-        arcRendererDecorators: [
-          charts.ArcLabelDecorator(
-              labelPosition: charts.ArcLabelPosition.inside),
-        ],
-      ),
+      animationDuration: const Duration(seconds: 1),
+      vertical: false, // Horizontal bar chart
+      barRendererDecorator: charts.BarLabelDecorator<String>(),
     );
   }
 
@@ -100,7 +116,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
     return charts.TimeSeriesChart(
       _incomeSeries,
       animate: true,
-      animationDuration: Duration(seconds: 1),
+      animationDuration: const Duration(seconds: 1),
       dateTimeFactory: const charts.LocalDateTimeFactory(),
     );
   }
@@ -117,28 +133,27 @@ class _ReportsScreenState extends State<ReportsScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: 20),
+            const Text(
               'Expense Distribution',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             Container(
               height: 300,
-              padding: EdgeInsets.all(16),
               child: _expenseSeries.isEmpty
-                  ? Center(child: Text('No expense data available'))
+                  ? const Center(child: Text('No expense data available'))
                   : _buildExpenseChart(),
             ),
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: 20),
+            const Text(
               'Income Over Time',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             Container(
               height: 300,
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: _incomeSeries.isEmpty
-                  ? Center(child: Text('No income data available'))
+                  ? const Center(child: Text('No income data available'))
                   : _buildIncomeChart(),
             ),
           ],
@@ -150,7 +165,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
         firstName: widget.firstName,
         lastName: widget.lastName,
         userId: widget.userId,
-      ), // Custom Bottom Navigation Bar
+      ),
     );
   }
 }

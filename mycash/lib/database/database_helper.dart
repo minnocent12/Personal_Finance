@@ -64,18 +64,29 @@ class DatabaseHelper {
         FOREIGN KEY(user_id) REFERENCES users(id)
       )
     ''');
-
-    // Create the savings goals table with goal_name, target_amount, and target_date columns
+// savings_goals table
     await db.execute('''
-      CREATE TABLE savings_goals (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER,
-        goal_name TEXT,
-        target_amount REAL,
-        target_date TEXT,
-        FOREIGN KEY(user_id) REFERENCES users(id)
-      )
-    ''');
+  CREATE TABLE IF NOT EXISTS savings_goals (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    goal_name TEXT,
+    target_amount REAL,
+    current_amount REAL DEFAULT 0,
+    target_date TEXT,
+    FOREIGN KEY(user_id) REFERENCES users(id)
+  )
+''');
+
+// Create savings_entries table for tracking individual savings
+    await db.execute('''
+  CREATE TABLE IF NOT EXISTS savings_entries (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    goal_id INTEGER,
+    amount REAL,
+    date TEXT,
+    FOREIGN KEY(goal_id) REFERENCES savings_goals(id)
+  )
+''');
 
     // Create the investments table with investment_type, current_value, and purchase_date columns
     await db.execute('''
@@ -94,7 +105,8 @@ class DatabaseHelper {
   // Handle database upgrades
   _onUpgrade(Database db, int oldVersion, int newVersion) async {
     if (oldVersion < 4) {
-      await db.execute('ALTER TABLE users ADD COLUMN monthly_budget REAL DEFAULT 0');
+      await db.execute(
+          'ALTER TABLE users ADD COLUMN monthly_budget REAL DEFAULT 0');
     }
   }
 
@@ -124,14 +136,61 @@ class DatabaseHelper {
   }
 
   Future<int> addSavingsGoal(int userId, String goalName, double targetAmount,
-      String targetDate) async {
+      double currentAmount, String targetDate) async {
     final db = await database;
     return await db.insert('savings_goals', {
       'user_id': userId,
       'goal_name': goalName,
       'target_amount': targetAmount,
+      'current_amount': currentAmount,
       'target_date': targetDate
     });
+  }
+
+  Future<int> addSavingEntry(int goalId, double amount, String date) async {
+    final db = await database;
+    await db.insert(
+        'savings_entries', {'goal_id': goalId, 'amount': amount, 'date': date});
+
+    // Update current amount in savings_goals
+    await db.rawUpdate('''
+    UPDATE savings_goals
+    SET current_amount = current_amount + ?
+    WHERE id = ?
+  ''', [amount, goalId]);
+
+    return goalId;
+  }
+
+  Future<List<Map<String, dynamic>>> getSavingsEntries(int goalId) async {
+    final db = await database;
+    return await db.query('savings_entries',
+        where: 'goal_id = ?', whereArgs: [goalId], orderBy: 'date ASC');
+  }
+
+  Future<void> updateSavingsGoal(int id, String goalName, double targetAmount,
+      double currentAmount, String targetDate) async {
+    final db = await database;
+    await db.update(
+      'savings_goals',
+      {
+        'goal_name': goalName,
+        'target_amount': targetAmount,
+        'current_amount': currentAmount,
+        'target_date': targetDate,
+      },
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  Future<void> deleteSavingsGoal(int id) async {
+    final db = await database;
+    await db.delete(
+      'savings_goals',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 
   Future<int> addInvestment(int userId, String investmentType,
@@ -150,14 +209,18 @@ class DatabaseHelper {
     final db = await database;
     var result = await db.rawQuery(
         'SELECT SUM(amount) as total FROM income WHERE user_id = ?', [userId]);
-    return result.first['total'] != null ? result.first['total'] as double : 0.0;
+    return result.first['total'] != null
+        ? result.first['total'] as double
+        : 0.0;
   }
 
   Future<double> getTotalExpenses(int userId) async {
     final db = await database;
     var result = await db.rawQuery(
         'SELECT SUM(amount) as total FROM expense WHERE user_id = ?', [userId]);
-    return result.first['total'] != null ? result.first['total'] as double : 0.0;
+    return result.first['total'] != null
+        ? result.first['total'] as double
+        : 0.0;
   }
 
   Future<double> getTotalSavings(int userId) async {
@@ -165,7 +228,9 @@ class DatabaseHelper {
     var result = await db.rawQuery(
         'SELECT SUM(target_amount) as total FROM savings_goals WHERE user_id = ?',
         [userId]);
-    return result.first['total'] != null ? result.first['total'] as double : 0.0;
+    return result.first['total'] != null
+        ? result.first['total'] as double
+        : 0.0;
   }
 
   Future<double> getTotalInvestments(int userId) async {
@@ -173,7 +238,9 @@ class DatabaseHelper {
     var result = await db.rawQuery(
         'SELECT SUM(amount_invested) as total FROM investments WHERE user_id = ?',
         [userId]);
-    return result.first['total'] != null ? result.first['total'] as double : 0.0;
+    return result.first['total'] != null
+        ? result.first['total'] as double
+        : 0.0;
   }
 
   Future<int> createUser(
@@ -232,8 +299,7 @@ class DatabaseHelper {
 
   Future<bool> isEmailUsed(String email) async {
     final db = await database;
-    var res =
-        await db.rawQuery("SELECT * FROM users WHERE email = ?", [email]);
+    var res = await db.rawQuery("SELECT * FROM users WHERE email = ?", [email]);
     return res.isNotEmpty;
   }
 
@@ -331,7 +397,9 @@ class DatabaseHelper {
   Future<List<Map<String, dynamic>>> getInvestments(int userId) async {
     final db = await database;
     return await db.query('investments',
-        where: 'user_id = ?', whereArgs: [userId], orderBy: 'purchase_date DESC');
+        where: 'user_id = ?',
+        whereArgs: [userId],
+        orderBy: 'purchase_date DESC');
   }
 
   // Method to set user's monthly budget
@@ -350,7 +418,7 @@ class DatabaseHelper {
     final db = await database;
     var result = await db.query('users',
         columns: ['monthly_budget'], where: 'id = ?', whereArgs: [userId]);
-        
+
     return result.isNotEmpty && result.first['monthly_budget'] != null
         ? result.first['monthly_budget'] as double
         : 0.0;
@@ -379,5 +447,68 @@ class DatabaseHelper {
       ORDER BY date ASC
     ''', [userId]);
   }
-}
 
+  // Get details of a specific goal
+  Future<Map<String, dynamic>?> getGoal(int goalId) async {
+    final db =
+        await database; // Assume 'database' returns your database instance
+    List<Map<String, dynamic>> result = await db.query(
+      'savings_goals',
+      where: 'id = ?',
+      whereArgs: [goalId],
+    );
+    return result.isNotEmpty ? result.first : null;
+  }
+
+  // Add a savings entry
+  Future<void> addSavingsEntry(int goalId, double amount, String date) async {
+    final db = await database;
+    await db.insert('savings_entries', {
+      'goal_id': goalId,
+      'amount': amount,
+      'date': date,
+    });
+    // Update the current amount of the goal
+    await updateGoalCurrentAmount(goalId, amount);
+  }
+
+  // Update the current amount of a specified goal
+  Future<void> updateGoalCurrentAmount(int goalId, double amount) async {
+    final db = await database;
+    // Get the current amount for the goal
+    final goal = await getGoal(goalId);
+    if (goal != null) {
+      double newCurrentAmount = goal['current_amount'] + amount;
+      await db.update(
+        'savings_goals',
+        {'current_amount': newCurrentAmount},
+        where: 'id = ?',
+        whereArgs: [goalId],
+      );
+    }
+  }
+
+  // Update an existing savings entry
+  Future<void> updateSavingsEntry(
+      int entryId, double amount, String date) async {
+    final db = await database;
+    await db.update(
+      'savings_entries',
+      {'amount': amount, 'date': date},
+      where: 'id = ?',
+      whereArgs: [entryId],
+    );
+  }
+
+  // Delete a savings entry
+  Future<void> deleteSavingsEntry(int entryId) async {
+    final db = await database;
+    await db.delete(
+      'savings_entries',
+      where: 'id = ?',
+      whereArgs: [entryId],
+    );
+    // Optionally, you may want to adjust the current amount of the related goal
+    // after deleting the entry, based on the original amount of the entry.
+  }
+}

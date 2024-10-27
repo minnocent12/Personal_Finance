@@ -6,6 +6,8 @@ import '../providers/user_provider.dart';
 import '../widgets/bottom_nav_bar.dart';
 import '../widgets/custom_drawer.dart';
 import '../widgets/top_app_bar.dart';
+import 'package:charts_flutter/flutter.dart'
+    as charts; // Importing charts_flutter package
 
 class InvestmentScreen extends StatefulWidget {
   final int userId;
@@ -13,7 +15,8 @@ class InvestmentScreen extends StatefulWidget {
   final String lastName;
   final VoidCallback onDataUpdated; // Callback for data update
 
-  const InvestmentScreen({super.key, 
+  const InvestmentScreen({
+    super.key,
     required this.userId,
     required this.firstName,
     required this.lastName,
@@ -31,9 +34,11 @@ class _InvestmentScreenState extends State<InvestmentScreen> {
   bool _isLoading = true;
 
   // Controllers for the dialog
-  final TextEditingController _investmentTypeController = TextEditingController();
+  final TextEditingController _investmentTypeController =
+      TextEditingController();
   final TextEditingController _currentValueController = TextEditingController();
-  final TextEditingController _amountInvestedController = TextEditingController();
+  final TextEditingController _amountInvestedController =
+      TextEditingController();
   final TextEditingController _dateController = TextEditingController();
 
   @override
@@ -74,7 +79,7 @@ class _InvestmentScreenState extends State<InvestmentScreen> {
         );
       } else {
         // Update existing investment
-        await _dbHelper.updateInvestment( // Corrected method name
+        await _dbHelper.updateInvestment(
           id,
           investmentType,
           currentValue,
@@ -91,7 +96,7 @@ class _InvestmentScreenState extends State<InvestmentScreen> {
   }
 
   Future<void> _deleteInvestment(int id) async {
-    await _dbHelper.deleteInvestment(id); // Corrected method name
+    await _dbHelper.deleteInvestment(id);
     await _loadInvestments();
     widget.onDataUpdated(); // Notify data update
   }
@@ -134,14 +139,12 @@ class _InvestmentScreenState extends State<InvestmentScreen> {
                 TextField(
                   controller: _currentValueController,
                   decoration: InputDecoration(labelText: 'Current Value'),
-                  keyboardType:
-                      TextInputType.numberWithOptions(decimal: true),
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
                 ),
                 TextField(
                   controller: _amountInvestedController,
                   decoration: InputDecoration(labelText: 'Amount Invested'),
-                  keyboardType:
-                      TextInputType.numberWithOptions(decimal: true),
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
                 ),
                 TextField(
                   controller: _dateController,
@@ -172,7 +175,8 @@ class _InvestmentScreenState extends State<InvestmentScreen> {
                 Navigator.of(context).pop();
                 _resetForm();
               },
-              child: Text('Cancel'),
+              child: Text(
+                  selectionColor: Color.fromARGB(1, 80, 113, 113), 'Cancel'),
             ),
             ElevatedButton(
               onPressed: () {
@@ -315,11 +319,10 @@ class _InvestmentScreenState extends State<InvestmentScreen> {
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
                                         children: [
                                           IconButton(
                                             icon: Icon(Icons.edit),
+                                            color: Color.fromRGBO(8, 76, 46, 1),
                                             onPressed: () {
                                               _showInvestmentDialog(
                                                 id: investment['id'],
@@ -336,6 +339,7 @@ class _InvestmentScreenState extends State<InvestmentScreen> {
                                           ),
                                           IconButton(
                                             icon: Icon(Icons.delete),
+                                            color: Color.fromRGBO(1, 31, 23, 1),
                                             onPressed: () {
                                               _deleteInvestment(
                                                   investment['id']);
@@ -346,11 +350,22 @@ class _InvestmentScreenState extends State<InvestmentScreen> {
                                     ),
                                   ],
                                 );
-                              }),
+                              }).toList(),
                             ],
                           ),
                         ),
                       ),
+                // Adding the simple bar chart
+                Container(
+                  height: 250,
+                  padding: const EdgeInsets.all(16.0),
+                  child: charts.BarChart(
+                    _createChartData(),
+                    animate: true,
+                    barRendererDecorator: charts.BarLabelDecorator<String>(),
+                    domainAxis: charts.OrdinalAxisSpec(),
+                  ),
+                ),
               ],
             ),
       bottomNavigationBar: BottomNavBar(
@@ -362,6 +377,31 @@ class _InvestmentScreenState extends State<InvestmentScreen> {
       ), // Custom Bottom Navigation Bar
     );
   }
+
+  List<charts.Series<InvestmentData, String>> _createChartData() {
+    // Preparing data for the chart
+    final data = _investments.map((investment) {
+      return InvestmentData(
+        investment['investment_type'],
+        investment['current_value'],
+      );
+    }).toList();
+
+    return [
+      charts.Series<InvestmentData, String>(
+        id: 'Investments',
+        colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault,
+        domainFn: (InvestmentData investment, _) => investment.type,
+        measureFn: (InvestmentData investment, _) => investment.value,
+        data: data,
+      )
+    ];
+  }
 }
 
+class InvestmentData {
+  final String type;
+  final double value;
 
+  InvestmentData(this.type, this.value);
+}

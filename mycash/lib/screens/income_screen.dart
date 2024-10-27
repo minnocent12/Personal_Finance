@@ -11,7 +11,8 @@ class IncomeScreen extends StatefulWidget {
   final String lastName;
   final VoidCallback onDataUpdated; // Callback for data update
 
-  const IncomeScreen({super.key, 
+  const IncomeScreen({
+    super.key,
     required this.userId,
     required this.firstName,
     required this.lastName,
@@ -103,7 +104,8 @@ class _IncomeScreenState extends State<IncomeScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text('Cancel'),
+              child: Text(
+                  selectionColor: Color.fromARGB(1, 80, 113, 113), 'Cancel'),
             ),
             ElevatedButton(
               onPressed: () {
@@ -121,6 +123,9 @@ class _IncomeScreenState extends State<IncomeScreen> {
 
                 Navigator.pop(context);
               },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+              ),
               child: Text('Save'),
             ),
           ],
@@ -193,7 +198,8 @@ class _IncomeScreenState extends State<IncomeScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text('Cancel'),
+              child: Text(
+                  selectionColor: Color.fromARGB(1, 80, 113, 113), 'Cancel'),
             ),
             ElevatedButton(
               onPressed: () {
@@ -212,6 +218,9 @@ class _IncomeScreenState extends State<IncomeScreen> {
 
                 Navigator.pop(context);
               },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+              ),
               child: Text('Update'),
             ),
           ],
@@ -302,12 +311,14 @@ class _IncomeScreenState extends State<IncomeScreen> {
                 children: [
                   IconButton(
                     icon: Icon(Icons.edit, size: 20),
+                    color: Color.fromRGBO(8, 76, 46, 1),
                     onPressed: () {
                       _showEditIncomeDialog(income);
                     },
                   ),
                   IconButton(
                     icon: Icon(Icons.delete, size: 20),
+                    color: Color.fromRGBO(1, 31, 23, 1),
                     onPressed: () {
                       db.deleteIncome(income['id']).then((_) {
                         _loadIncome();

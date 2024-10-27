@@ -12,7 +12,7 @@ class ExpenseScreen extends StatefulWidget {
   final String lastName;
   final VoidCallback onDataUpdated;
 
-  const ExpenseScreen({super.key, 
+  ExpenseScreen({
     required this.userId,
     required this.firstName,
     required this.lastName,
@@ -165,12 +165,14 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                 children: [
                   IconButton(
                     icon: Icon(Icons.edit, size: 20),
+                    color: Color.fromRGBO(8, 76, 46, 1),
                     onPressed: () {
                       _showEditExpenseDialog(expense);
                     },
                   ),
                   IconButton(
                     icon: Icon(Icons.delete, size: 20),
+                    color: Color.fromRGBO(1, 31, 23, 1),
                     onPressed: () {
                       db.deleteExpense(expense['id']).then((_) {
                         _loadExpenses();
@@ -194,7 +196,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
 
     return Column(
       children: [
-        SizedBox(
+        Container(
           height: 200,
           child: charts.PieChart(
             _createChartData(),
@@ -237,7 +239,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
     final TextEditingController categoryController = TextEditingController();
     DateTime selectedDate = DateTime.now();
 
-    Future<void> selectDate(BuildContext context) async {
+    Future<void> _selectDate(BuildContext context) async {
       final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
@@ -278,7 +280,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                     ),
                     IconButton(
                       icon: Icon(Icons.calendar_today),
-                      onPressed: () => selectDate(context),
+                      onPressed: () => _selectDate(context),
                     ),
                   ],
                 ),
@@ -288,7 +290,8 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text('Cancel'),
+              child: Text(
+                  selectionColor: Color.fromARGB(1, 80, 113, 113), 'Cancel'),
             ),
             ElevatedButton(
               onPressed: () {
@@ -305,6 +308,9 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
 
                 Navigator.pop(context);
               },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+              ),
               child: Text('Save'),
             ),
           ],
@@ -320,7 +326,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
         TextEditingController(text: expense['category']);
     DateTime selectedDate = DateTime.parse(expense['date']);
 
-    Future<void> selectDate(BuildContext context) async {
+    Future<void> _selectDate(BuildContext context) async {
       final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
@@ -361,7 +367,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                     ),
                     IconButton(
                       icon: Icon(Icons.calendar_today),
-                      onPressed: () => selectDate(context),
+                      onPressed: () => _selectDate(context),
                     ),
                   ],
                 ),
@@ -371,7 +377,8 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text('Cancel'),
+              child: Text(
+                  selectionColor: Color.fromARGB(1, 80, 113, 113), 'Cancel'),
             ),
             ElevatedButton(
               onPressed: () {
@@ -388,6 +395,9 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
 
                 Navigator.pop(context);
               },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+              ),
               child: Text('Update'),
             ),
           ],
@@ -423,10 +433,10 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                 ),
                 ElevatedButton(
                   onPressed: _showAddExpenseDialog,
+                  child: Text('+ Add Expense'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
                   ),
-                  child: Text('+ Add Expense'),
                 ),
               ],
             ),
